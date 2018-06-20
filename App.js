@@ -1,34 +1,30 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import 'expo'
+import React, { Component } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import { createStore, applyMiddleware } from 'redux'
+import { Provider, connect } from 'react-redux'
+import axios from 'axios'
+import axiosMiddleware from 'redux-axios-middleware'
 
-export default class App extends React.Component {
-  constructor() {
-    super()
+import reducer from './reducer'
+import RepoList from './RepoList'
 
-    this.state = {
-      screens: []
-    }
-  }
+const client = axios.create({
+  baseURL: 'https://api.github.com',
+  responseType: 'json'
+})
 
-  async componentWillMount() {
-    //const screens = await AsyncStorage.getItem('screens')
-    //if(!screens) {
-      try {
-        //const response = await
-        fetch('https://raw.githubusercontent.com/lubaochuan/wbcc/scale-back/data/screens.json').then(response => response.json())
-        .then(data => this.setState({screens: data.screens}))
-      } catch(e) {
-        console.warn("fetch Error: ", error)
-     }
-  // }
-  }
+const store = createStore(reducer, applyMiddleware(axiosMiddleware(client)))
 
+export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>{JSON.stringify(this.state.screens)}</Text>
-      </View>
-    );
+      <Provider store={store}>
+        <View style={styles.container}>
+          <RepoList />
+        </View>
+      </Provider>
+    )
   }
 }
 
@@ -36,7 +32,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+    marginTop: 50
+  }
 });
