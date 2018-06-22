@@ -2,6 +2,7 @@ This example uses redux to fetch a JSON file and caches it till the remote copy 
 Install dependencies:
 ```
 npm install axios redux-axios-middleware redux react-redux --save
+npm install redux-persist --save
 ```
 
 Resources:

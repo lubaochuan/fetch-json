@@ -2,6 +2,10 @@ import 'expo'
 import React, { Component } from 'react'
 import { StyleSheet, Text, View } from 'react-native'
 import { createStore, applyMiddleware } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import logger from 'redux-logger'
+import storage from 'redux-persist/lib/storage'
+// defaults to AsyncStorage for react-native
 import { Provider, connect } from 'react-redux'
 import axios from 'axios'
 import axiosMiddleware from 'redux-axios-middleware'
@@ -14,7 +18,17 @@ const client = axios.create({
   responseType: 'json'
 })
 
-const store = createStore(reducer, applyMiddleware(axiosMiddleware(client)))
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
+const persistedReducer = persistReducer(persistConfig, reducer)
+
+const store = createStore(
+  persistedReducer,
+  applyMiddleware(axiosMiddleware(client), logger)
+)
 
 export default class App extends Component {
   render() {

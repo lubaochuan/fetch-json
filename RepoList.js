@@ -7,7 +7,7 @@ import { listRepos } from './reducer'
 
 class RepoList extends Component {
   componentDidMount() {
-    this.props.listRepos('relferreira')
+    this.props.listRepos('lubaochuan')
   }
 
   renderItem = ({ item }) => (
